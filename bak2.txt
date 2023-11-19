@@ -1,0 +1,93 @@
+import streamlit as st
+import plotly.figure_factory as ff
+import numpy as np
+import pandas as pd
+import numpy as np
+from typing import List
+import altair as alt
+
+DATE_COLUMN = 'month_name'
+DATA_URL = ('https://docs.google.com/spreadsheets/d/e/2PACX-1vRifHGM_iqkAo_9yWFckhtQOu7J-ybWSTJppU_JBhYq-cQegFDqgezIB6X5c3dHAODXDvKJ__AUZzvC/pub?gid=0&single=true&output=csv')
+
+
+def load_data(nrows):
+    data = pd.read_csv(DATA_URL, nrows=nrows)
+    data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN], format='%Y %B', errors='coerce')
+    data[DATE_COLUMN] = data[DATE_COLUMN].dt.strftime('%B %Y')
+    return data
+
+
+# This code is different for each deployed app.
+CURRENT_THEME = "blue"
+IS_DARK_THEME = True
+EXPANDER_TEXT = """
+    This is a custom theme. You can enable it by copying the following code
+    to `.streamlit/config.toml`:
+    """
+"""
+# OD Dashboard
+"""
+# Create a text element and let the reader know the data is loading.
+data_load_state = st.text('Loading data...')
+# Load 10,000 rows of data into the dataframe.
+data = load_data(10000)
+# Notify the reader that the data was successfully loaded.
+data_load_state.text('Welcome for the OD Dashboard')
+
+""
+
+THEMES = [
+    "light",
+    "dark",
+    "green",
+    "blue",
+]
+GITHUB_OWNER = "streamlit"
+
+# Show thumbnails for available themes.
+# As html img tags here, so we can add links on them.
+cols = st.columns(len(THEMES))
+for col, theme in zip(cols, THEMES):
+
+    # Get repo name for this theme (to link to correct deployed app)-
+    if theme == "light":
+        repo = "theming-showcase"
+    else:
+        repo = f"theming-showcase-{theme}"
+
+    # Set border of current theme to red, otherwise black or white
+    if theme == CURRENT_THEME:
+        border_color = "red"
+    else:
+        border_color = "lightgrey" if IS_DARK_THEME else "black"
+""
+
+""
+""
+
+# Draw some dummy content in main page and sidebar.
+def draw_all(
+    key,
+    plot=False,
+):
+    st.write(
+        """
+        # Example Widgets
+        
+        These widgets don't do anything. But look at all the new colors they got 👀 
+    
+        ```python
+        # First some code.
+        streamlit = "cool"
+        theming = "fantastic"
+        both = "💥"
+        ```
+        """
+    )
+
+
+
+draw_all("main", plot=True)
+
+with st.sidebar:
+    draw_all("sidebar")
