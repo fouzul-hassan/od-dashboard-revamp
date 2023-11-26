@@ -9,6 +9,10 @@ import subprocess
 import sys
 import os
 
+os.system('python -m pip install --upgrade pip')
+os.system('python -m pip install numpy')
+os.system('python -m pip install streamlit')
+
 # Create a virtual environment named 'streamlit'
 venv_command = [sys.executable, '-m', 'venv', 'streamlit']
 subprocess.run(venv_command, check=True)
