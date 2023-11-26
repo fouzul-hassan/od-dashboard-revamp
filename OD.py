@@ -9,25 +9,6 @@ import subprocess
 import sys
 import os
 
-os.system('python -m pip install --upgrade pip')
-os.system('python -m pip install numpy')
-os.system('python -m pip install streamlit')
-
-# Create a virtual environment named 'streamlit'
-venv_command = [sys.executable, '-m', 'venv', 'streamlit']
-subprocess.run(venv_command, check=True)
-
-# Activate the virtual environment
-venv_activate_path = os.path.join('streamlit', 'bin', 'activate')
-activate_command = ['source', venv_activate_path]
-subprocess.run(activate_command, check=True)
-
-# Install Streamlit
-install_command = ['pip', 'install', 'streamlit']
-subprocess.run(install_command, check=True)
-
-
-
 
 st.title('OD Dashboard - AIESEC in Sri Lanka')
 
