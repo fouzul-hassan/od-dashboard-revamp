@@ -5,6 +5,23 @@ from typing import List
 import altair as alt
 import matplotlib.pyplot as plt
 import plotly.express as px
+import subprocess
+import sys
+import os
+
+# Create a virtual environment named 'streamlit'
+venv_command = [sys.executable, '-m', 'venv', 'streamlit']
+subprocess.run(venv_command, check=True)
+
+# Activate the virtual environment
+venv_activate_path = os.path.join('streamlit', 'bin', 'activate')
+activate_command = ['source', venv_activate_path]
+subprocess.run(activate_command, check=True)
+
+# Install Streamlit
+install_command = ['pip', 'install', 'streamlit']
+subprocess.run(install_command, check=True)
+
 
 
 
