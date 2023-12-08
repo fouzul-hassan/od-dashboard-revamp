@@ -45,10 +45,9 @@ filtered_data = data[(data['entity'] == selected_entity) & (data['month_name'] =
 filtered_data_entity = data[(data['entity'] == selected_entity)]
 filtered_data2 = filtered_data_month = data[(data['month_name'] == selected_month)]
 
-
+#Bubble Plot
 def plot_bubble_chart(filtered_data2):
     # Bubble plot using Plotly
-    
     fig = px.scatter(filtered_data2, x='HDI', y='XDI', size='ODI', color='entity',
                      title='Bubble Plot', labels={'HDI': 'HDI', 'XDI': 'XDI', 'ODI': 'ODI'},
                      )
@@ -59,14 +58,15 @@ def plot_bubble_chart(filtered_data2):
         legend_title_text='Entity',
         xaxis_title='HDI',
         yaxis_title='XDI',
-        xaxis=dict(range=[0, 1]), # Set x-axis range to [0, 1]
-        yaxis=dict(range=[0, 1]), # Set y-axis range to [0, 1]
-        paper_bgcolor='rgba(0,0,0,0)' # Set background color to transparent
+        xaxis=dict(range=[0, 1]),  # Set x-axis range to [0, 1]
+        yaxis=dict(range=[0, 1]),  # Set y-axis range to [0, 1]
+        paper_bgcolor='rgba(0,0,0,0)'  # Set background color to transparent
     )
 
-    # Display the plot using Streamlit
-    st.plotly_chart(fig)
+    # Display the plot using Streamlit with use_container_width=True
+    st.plotly_chart(fig, use_container_width=True)
 
+#Line Chart
 def plot_score_line_chart(filtered_data, score_column, color):
     # Melt the DataFrame to long format
     melted_data = filtered_data.melt(id_vars=['month_name'], var_name='Entity', value_name='Score')
@@ -89,6 +89,7 @@ def plot_score_line_chart(filtered_data, score_column, color):
     st.altair_chart(chart, use_container_width=True)
 ##006db0
 
+#Bar Chart
 def plot_score_bar_chart(filtered_data, score_column, color):
     # Melt the DataFrame to long format
     melted_data = filtered_data.melt(id_vars=['entity'], var_name='Function', value_name='Score')
@@ -111,23 +112,21 @@ def plot_score_bar_chart(filtered_data, score_column, color):
     # Display the chart using Streamlit
     st.altair_chart(chart, use_container_width=True)
 
-
+# Score vs Function bar chart
 def gen_bar_chart(selected_entity, selected_month, data):
     filtered_data = data[(data['month_name'] == selected_month) & (data['entity'] == selected_entity)]
     melted_data = filtered_data.melt(id_vars=['entity'], var_name='Function', value_name='Score')
     melted_data['Score'] = pd.to_numeric(melted_data['Score'], errors='coerce')
+
+    # Create a bar chart using Altair
     chart = alt.Chart(melted_data).mark_bar(opacity=0.7).encode(
         x=alt.X('Function:N', title='Function'),
         y=alt.Y('Score:Q', title='Score'),
         tooltip=['Function:N', 'Score:Q'],  # Include Function and Score in the tooltip
         # color=alt.value('blue')  # You can change the color if needed
     ).properties(
-        width=600,
-        height=400,
         title=f'Scores vs Function Name - {selected_entity} - {selected_month}'
     )
-
-
 
     # Calculate the average scores
     filtered_data2 = data[data['month_name'] == selected_month]
@@ -154,6 +153,7 @@ def gen_bar_chart(selected_entity, selected_month, data):
     st.altair_chart(combined_chart, use_container_width=True)
 
 
+#kpi metrics
 def display_kpi_metrics(selected_entity, selected_month, kpis, title):
     st.markdown(
         f"<h4 style='color: white;'>{title}</h4>", 
@@ -219,6 +219,115 @@ gen_bar_chart(selected_entity, selected_month, data)
 
 
 """
+responsive_css = """
+<style>
+    .main-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .chart-container {
+        width: 100%;
+        max-width: 800px;
+        margin: auto;
+    }
+
+    @media only screen and (max-width: 320px) {
+        .main-container {
+            padding: 5px;
+        }
+
+        .chart-container {
+            max-width: 100%;
+        }
+    }
+
+    @media only screen and (min-width: 321px) and (max-width: 480px) {
+        .main-container {
+            padding: 10px;
+        }
+
+        .chart-container {
+            max-width: 100%;
+        }
+    }
+
+    @media only screen and (min-width: 481px) and (max-width: 600px) {
+        .main-container {
+            padding: 15px;
+        }
+
+        .chart-container {
+            max-width: 100%;
+        }
+    }
+
+    @media only screen and (min-width: 601px) and (max-width: 768px) {
+        .main-container {
+            padding: 20px;
+        }
+
+        .chart-container {
+            max-width: 100%;
+        }
+    }
+
+    @media only screen and (min-width: 769px) and (max-width: 900px) {
+        .main-container {
+            padding: 25px;
+        }
+
+        .chart-container {
+            max-width: 100%;
+        }
+    }
+
+    @media only screen and (min-width: 901px) and (max-width: 1024px) {
+        .main-container {
+            padding: 30px;
+        }
+
+        .chart-container {
+            max-width: 100%;
+        }
+    }
+
+    @media only screen and (min-width: 1025px) and (max-width: 1200px) {
+        .main-container {
+            padding: 35px;
+        }
+
+        .chart-container {
+            max-width: 100%;
+        }
+    }
+</style>
+"""
+
+st.markdown(responsive_css, unsafe_allow_html=True)
+
+with st.markdown("<div class='main-container'>", unsafe_allow_html=True):
+    st.subheader('XDI Scores')
+    xdi_kpis = ['DXP', 'iGTa', 'iGTe', 'iGV', 'oGTa', 'oGTe', 'oGV']
+    display_kpi_metrics(selected_entity, selected_month, xdi_kpis, "XDI Scores")
+
+    st.subheader('HDI Scores')
+    hdi_kpis = ['BD', 'Brand', 'EM', 'ER', 'FnL', 'IM', 'TM']
+    display_kpi_metrics(selected_entity, selected_month, hdi_kpis, "HDI Scores")
+
+    st.subheader('ODI Scores')
+    odi_kpis = ['ODI', 'XDI', 'HDI']
+    display_kpi_metrics(selected_entity, selected_month, odi_kpis, "ODI Scores")
+
+    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+
+    with st.markdown("<div class='chart-container'>", unsafe_allow_html=True):
+        gen_bar_chart(selected_entity, selected_month, data)
+
+    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+
+
 col1, col2, col3 = st.columns(3)
 
 # Plot each chart in a separate column
@@ -231,7 +340,6 @@ with col2:
 with col3:
     plot_score_line_chart(filtered_data_entity, 'ODI', 'orange')
 
-    
 col1, col2, col3 = st.columns(3)
 
 # Plot each chart in a separate column
@@ -243,7 +351,6 @@ with col2:
 
 with col3:
     plot_score_bar_chart(filtered_data2, 'ODI', 'orange')
-
 
 # Display the DataFrame with functions in one column and selected entities
 st.subheader(f'Entity vs Functions Scores for {selected_month}')
