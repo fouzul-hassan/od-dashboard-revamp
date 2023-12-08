@@ -220,37 +220,6 @@ display_kpi_metrics(selected_entity, selected_month, hdi_kpis, "HDI Scores")
 odi_kpis = ['ODI', 'XDI', 'HDI']
 display_kpi_metrics(selected_entity, selected_month, odi_kpis, "ODI Scores")
 
-# def display_kpi_metrics_new(selected_entity, selected_month, kpis, title, data):
-#     st.markdown(
-#         f"<h4 style='color: white; background-color: #0076b6; padding: 10px; border-radius: 10px;'>{title}</h4>",
-#         unsafe_allow_html=True
-#     )
-
-#     # Filter data based on the selected entity and month
-#     filtered_data = data[(data['entity'] == selected_entity) & (data['month_name'] == selected_month)]
-
-#     # Get KPI values and names from the filtered data
-#     kpi_values = filtered_data[kpis].values[0]
-#     kpi_names = kpis
-
-#     num_cols = 7  # Number of columns to display KPIs
-#     num_kpis = len(kpi_values)
-    
-#     # Calculate the number of rows needed based on the number of KPIs and columns
-#     num_rows = (num_kpis + num_cols - 1) // num_cols
-
-#     # Iterate over the rows to display KPIs in rows of 3
-#     for i in range(num_rows):
-#         cols = st.columns(num_cols)
-#         for j in range(num_cols):
-#             idx = i * num_cols + j
-#             if idx < num_kpis:
-#                 cols[j].metric(
-#                     label=kpi_names[idx],
-#                     value=kpi_values[idx],
-#                     delta=0,  # You can customize delta as needed
-#                 )
-
 """
 
 
@@ -288,11 +257,6 @@ with col3:
 st.subheader(f'Entity vs Functions Scores for {selected_month}')
 filtered_data2 = data[data['month_name'] == selected_month]
 pivot_data = filtered_data2.set_index('entity').T.drop('month_name')
-# # st.write(pivot_data)
-# st.dataframe(pivot_data, use_container_width=True)
-
-# # Plot bubble chart
-# plot_bubble_chart(filtered_data2)
 
 # Create three columns for line charts
 col1, col2= st.columns(2)
