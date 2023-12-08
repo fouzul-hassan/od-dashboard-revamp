@@ -9,10 +9,11 @@ import subprocess
 import sys
 import os
 
+icon_path = 'https://aiesec.lk/data/dist/images/favicon.png'
 st.set_page_config(
     layout="wide",
     page_title="OD Dashboard - AIESEC in Sri Lanka",
-    page_icon="👋",
+    page_icon= icon_path,
 )
 
 # Load data outside of Streamlit app initialization
