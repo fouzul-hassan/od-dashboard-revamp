@@ -9,25 +9,52 @@ import subprocess
 import sys
 import os
 
+st.set_page_config(
+    layout="wide",
+    page_title="OD Dashboard - AIESEC in Sri Lanka",
+    page_icon="👋",
+)
+
 
 st.title('OD Dashboard - AIESEC in Sri Lanka')
 
-DATE_COLUMN = 'month_name'
-DATA_URL = ('https://docs.google.com/spreadsheets/d/e/2PACX-1vRifHGM_iqkAo_9yWFckhtQOu7J-ybWSTJppU_JBhYq-cQegFDqgezIB6X5c3dHAODXDvKJ__AUZzvC/pub?gid=0&single=true&output=csv')
 
+@st.cache_data
+def load_data(data_url):
+    try:
+        data = pd.read_csv(data_url)
 
-def load_data(nrows):
-    data = pd.read_csv(DATA_URL, nrows=nrows)
-    data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN], format='%Y %B', errors='coerce')
-    data[DATE_COLUMN] = data[DATE_COLUMN].dt.strftime('%B %Y')
-    return data
+        # Check if 'month_name' column exists
+        if 'month_name' not in data.columns:
+            st.error("Error: 'month_name' column not found in the CSV file.")
+            return None
 
-# Create a text element and let the reader know the data is loading.
+        data['month_name'] = pd.to_datetime(data['month_name'], format='%Y %B', errors='coerce').dt.strftime('%B %Y')
+        return data
+    except Exception as e:
+        st.error(f"An error occurred while loading data: {e}")
+        return None
+
+# Example usage for loading the first CSV
+data_url1 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRifHGM_iqkAo_9yWFckhtQOu7J-ybWSTJppU_JBhYq-cQegFDqgezIB6X5c3dHAODXDvKJ__AUZzvC/pub?gid=0&single=true&output=csv'
+data = load_data(data_url1)
+
+# Example usage for loading the second CSV
+data_url2 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4p6YJ0XKwY0AmS37dz_j7cuUG4uZYoZeFyCuWP0MBbjBgV7XXf2nqGompdTW-o-2x1CAxmIExoHXy/pub?gid=1230705189&single=true&output=csv'
+data_core = load_data(data_url2)
+
+# Load data
 data_load_state = st.text('Loading data...')
-# Load 10,000 rows of data into the dataframe.
-data = load_data(10000)
-# Notify the reader that the data was successfully loaded.
 data_load_state.text('Welcome to the OD Dashboard')
+
+# Function to filter data based on user selection
+@st.cache
+def filter_data(data, selected_entity, selected_month):
+    return data[(data['entity'] == selected_entity) & (data['month_name'] == selected_month)]
+
+
+
+
 
 # Get unique entity and month lists
 unique_entities = data['entity'].unique()
@@ -45,7 +72,6 @@ filtered_data = data[(data['entity'] == selected_entity) & (data['month_name'] =
 filtered_data_entity = data[(data['entity'] == selected_entity)]
 filtered_data2 = filtered_data_month = data[(data['month_name'] == selected_month)]
 
-#Bubble Plot
 def plot_bubble_chart(filtered_data2):
     # Bubble plot using Plotly
     fig = px.scatter(filtered_data2, x='HDI', y='XDI', size='ODI', color='entity',
@@ -58,15 +84,14 @@ def plot_bubble_chart(filtered_data2):
         legend_title_text='Entity',
         xaxis_title='HDI',
         yaxis_title='XDI',
-        xaxis=dict(range=[0, 1]),  # Set x-axis range to [0, 1]
-        yaxis=dict(range=[0, 1]),  # Set y-axis range to [0, 1]
-        paper_bgcolor='rgba(0,0,0,0)'  # Set background color to transparent
+        xaxis=dict(range=[0, 1]), # Set x-axis range to [0, 1]
+        yaxis=dict(range=[0, 1]), # Set y-axis range to [0, 1]
+        paper_bgcolor='rgba(0,0,0,0)' # Set background color to transparent
     )
 
-    # Display the plot using Streamlit with use_container_width=True
+    # Display the plot using Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
-#Line Chart
 def plot_score_line_chart(filtered_data, score_column, color):
     # Melt the DataFrame to long format
     melted_data = filtered_data.melt(id_vars=['month_name'], var_name='Entity', value_name='Score')
@@ -87,9 +112,7 @@ def plot_score_line_chart(filtered_data, score_column, color):
 
     # Display the chart using Streamlit
     st.altair_chart(chart, use_container_width=True)
-##006db0
 
-#Bar Chart
 def plot_score_bar_chart(filtered_data, score_column, color):
     # Melt the DataFrame to long format
     melted_data = filtered_data.melt(id_vars=['entity'], var_name='Function', value_name='Score')
@@ -153,7 +176,6 @@ def gen_bar_chart(selected_entity, selected_month, data):
     st.altair_chart(combined_chart, use_container_width=True)
 
 
-#kpi metrics
 def display_kpi_metrics(selected_entity, selected_month, kpis, title):
     st.markdown(
         f"<h4 style='color: white;'>{title}</h4>", 
@@ -193,8 +215,7 @@ def display_kpi_metrics(selected_entity, selected_month, kpis, title):
                     """
                 , unsafe_allow_html=True)
 
-
-
+     
 # Display XDI Scores
 xdi_kpis = ['DXP', 'iGTa', 'iGTe', 'iGV', 'oGTa', 'oGTe', 'oGV']
 display_kpi_metrics(selected_entity, selected_month, xdi_kpis, "XDI Scores")
@@ -207,127 +228,10 @@ display_kpi_metrics(selected_entity, selected_month, hdi_kpis, "HDI Scores")
 odi_kpis = ['ODI', 'XDI', 'HDI']
 display_kpi_metrics(selected_entity, selected_month, odi_kpis, "ODI Scores")
 
-
-"""
-
-
-
-"""
+# Generate bar chart
 gen_bar_chart(selected_entity, selected_month, data)
 
-"""
-
-
-"""
-responsive_css = """
-<style>
-    .main-container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 20px;
-    }
-
-    .chart-container {
-        width: 100%;
-        max-width: 800px;
-        margin: auto;
-    }
-
-    @media only screen and (max-width: 320px) {
-        .main-container {
-            padding: 5px;
-        }
-
-        .chart-container {
-            max-width: 100%;
-        }
-    }
-
-    @media only screen and (min-width: 321px) and (max-width: 480px) {
-        .main-container {
-            padding: 10px;
-        }
-
-        .chart-container {
-            max-width: 100%;
-        }
-    }
-
-    @media only screen and (min-width: 481px) and (max-width: 600px) {
-        .main-container {
-            padding: 15px;
-        }
-
-        .chart-container {
-            max-width: 100%;
-        }
-    }
-
-    @media only screen and (min-width: 601px) and (max-width: 768px) {
-        .main-container {
-            padding: 20px;
-        }
-
-        .chart-container {
-            max-width: 100%;
-        }
-    }
-
-    @media only screen and (min-width: 769px) and (max-width: 900px) {
-        .main-container {
-            padding: 25px;
-        }
-
-        .chart-container {
-            max-width: 100%;
-        }
-    }
-
-    @media only screen and (min-width: 901px) and (max-width: 1024px) {
-        .main-container {
-            padding: 30px;
-        }
-
-        .chart-container {
-            max-width: 100%;
-        }
-    }
-
-    @media only screen and (min-width: 1025px) and (max-width: 1200px) {
-        .main-container {
-            padding: 35px;
-        }
-
-        .chart-container {
-            max-width: 100%;
-        }
-    }
-</style>
-"""
-
-st.markdown(responsive_css, unsafe_allow_html=True)
-
-with st.markdown("<div class='main-container'>", unsafe_allow_html=True):
-    st.subheader('XDI Scores')
-    xdi_kpis = ['DXP', 'iGTa', 'iGTe', 'iGV', 'oGTa', 'oGTe', 'oGV']
-    display_kpi_metrics(selected_entity, selected_month, xdi_kpis, "XDI Scores")
-
-    st.subheader('HDI Scores')
-    hdi_kpis = ['BD', 'Brand', 'EM', 'ER', 'FnL', 'IM', 'TM']
-    display_kpi_metrics(selected_entity, selected_month, hdi_kpis, "HDI Scores")
-
-    st.subheader('ODI Scores')
-    odi_kpis = ['ODI', 'XDI', 'HDI']
-    display_kpi_metrics(selected_entity, selected_month, odi_kpis, "ODI Scores")
-
-    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
-
-    with st.markdown("<div class='chart-container'>", unsafe_allow_html=True):
-        gen_bar_chart(selected_entity, selected_month, data)
-
-    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
-
-
+# Create three columns for line charts
 col1, col2, col3 = st.columns(3)
 
 # Plot each chart in a separate column
@@ -340,6 +244,7 @@ with col2:
 with col3:
     plot_score_line_chart(filtered_data_entity, 'ODI', 'orange')
 
+# Create three columns for bar charts
 col1, col2, col3 = st.columns(3)
 
 # Plot each chart in a separate column
@@ -354,9 +259,30 @@ with col3:
 
 # Display the DataFrame with functions in one column and selected entities
 st.subheader(f'Entity vs Functions Scores for {selected_month}')
-
 filtered_data2 = data[data['month_name'] == selected_month]
 pivot_data = filtered_data2.set_index('entity').T.drop('month_name')
 st.write(pivot_data)
 
+# Plot bubble chart
 plot_bubble_chart(filtered_data2)
+
+# Add a dropdown for function selection in the sidebar
+function_list = ["FnL","BD","ER","TM","Brand","EM","IM","iGV","oGV","iGTa","iGTe","oGTa","oGTe","DXP"]
+selected_function = st.selectbox('Select Function', function_list)
+
+# Display the relevant function data based on the selected function
+function_data = pivot_data.loc[[selected_function]]
+
+st.write(function_data)
+
+plot_score_bar_chart(filtered_data2, selected_function, 'green')
+
+plot_score_line_chart(filtered_data_entity, selected_function, 'green')
+
+data_core_filtered = data_core[(data_core['Function'] == selected_function) & (data_core['month_name'] == selected_month)]
+columns_to_display = [col for col in data_core_filtered.columns if col not in ['month_name', 'Function']]
+
+# Remove index column
+data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(drop=True)
+
+st.write(data_core_filtered_display)
