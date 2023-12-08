@@ -287,3 +287,4 @@ columns_to_display = [col for col in data_core_filtered.columns if col not in ['
 data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(drop=True)
 
 st.dataframe(data_core_filtered_display, use_container_width=True)
+
