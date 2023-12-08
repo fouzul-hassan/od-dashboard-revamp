@@ -62,6 +62,11 @@ filtered_data = data[(data['entity'] == selected_entity) & (data['month_name'] =
 filtered_data_entity = data[(data['entity'] == selected_entity)]
 filtered_data2 = filtered_data_month = data[(data['month_name'] == selected_month)]
 
+#defined colors
+xdi_col="#e06666"
+hdi_col="#b7b7b7"
+odi_col="#46bdc6"
+gen="#cccccc"
 
 def plot_bubble_chart(filtered_data2):
     # Bubble plot using Plotly
@@ -191,7 +196,7 @@ def display_kpi_metrics(selected_entity, selected_month, kpis, title):
                 cols[j].markdown(
                     f"""
                     <div style="
-                        background-color: #006db0;
+                        background-color: #0076b6;
                         border-radius: 10px;
                         padding: 10px;
                         margin: 5px;
@@ -214,6 +219,37 @@ display_kpi_metrics(selected_entity, selected_month, hdi_kpis, "HDI Scores")
 odi_kpis = ['ODI', 'XDI', 'HDI']
 display_kpi_metrics(selected_entity, selected_month, odi_kpis, "ODI Scores")
 
+# def display_kpi_metrics_new(selected_entity, selected_month, kpis, title, data):
+#     st.markdown(
+#         f"<h4 style='color: white; background-color: #0076b6; padding: 10px; border-radius: 10px;'>{title}</h4>",
+#         unsafe_allow_html=True
+#     )
+
+#     # Filter data based on the selected entity and month
+#     filtered_data = data[(data['entity'] == selected_entity) & (data['month_name'] == selected_month)]
+
+#     # Get KPI values and names from the filtered data
+#     kpi_values = filtered_data[kpis].values[0]
+#     kpi_names = kpis
+
+#     num_cols = 7  # Number of columns to display KPIs
+#     num_kpis = len(kpi_values)
+    
+#     # Calculate the number of rows needed based on the number of KPIs and columns
+#     num_rows = (num_kpis + num_cols - 1) // num_cols
+
+#     # Iterate over the rows to display KPIs in rows of 3
+#     for i in range(num_rows):
+#         cols = st.columns(num_cols)
+#         for j in range(num_cols):
+#             idx = i * num_cols + j
+#             if idx < num_kpis:
+#                 cols[j].metric(
+#                     label=kpi_names[idx],
+#                     value=kpi_values[idx],
+#                     delta=0,  # You can customize delta as needed
+#                 )
+
 """
 
 
@@ -226,36 +262,49 @@ col1, col2, col3 = st.columns(3)
 
 # Plot each chart in a separate column
 with col1:
-    plot_score_line_chart(filtered_data_entity, 'XDI', 'green')
+    plot_score_line_chart(filtered_data_entity, 'XDI', xdi_col)
 
 with col2:
-    plot_score_line_chart(filtered_data_entity, 'HDI', 'red')
+    plot_score_line_chart(filtered_data_entity, 'HDI', hdi_col)
 
 with col3:
-    plot_score_line_chart(filtered_data_entity, 'ODI', 'orange')
+    plot_score_line_chart(filtered_data_entity, 'ODI', odi_col)
 
 # Create three columns for bar charts
 col1, col2, col3 = st.columns(3)
 
 # Plot each chart in a separate column
 with col1:
-    plot_score_bar_chart(filtered_data2, 'XDI', 'green')
+    plot_score_bar_chart(filtered_data2, 'XDI', xdi_col)
 
 with col2:
-    plot_score_bar_chart(filtered_data2, 'HDI', 'red')
+    plot_score_bar_chart(filtered_data2, 'HDI', hdi_col)
 
 with col3:
-    plot_score_bar_chart(filtered_data2, 'ODI', 'orange')
+    plot_score_bar_chart(filtered_data2, 'ODI', odi_col)
 
 # Display the DataFrame with functions in one column and selected entities
 st.subheader(f'Entity vs Functions Scores for {selected_month}')
 filtered_data2 = data[data['month_name'] == selected_month]
 pivot_data = filtered_data2.set_index('entity').T.drop('month_name')
-# st.write(pivot_data)
-st.dataframe(pivot_data, use_container_width=True)
+# # st.write(pivot_data)
+# st.dataframe(pivot_data, use_container_width=True)
 
-# Plot bubble chart
-plot_bubble_chart(filtered_data2)
+# # Plot bubble chart
+# plot_bubble_chart(filtered_data2)
+
+# Create three columns for line charts
+col1, col2= st.columns(2)
+
+# Plot each chart in a separate column
+with col1:
+    st.dataframe(pivot_data, use_container_width=True)
+
+with col2:
+    plot_bubble_chart(filtered_data2)
+
+# Create three columns for bar charts
+col1, col2 = st.columns(2)
 
 # Add a dropdown for function selection in the sidebar
 function_list = ["FnL", "BD", "ER", "TM", "Brand", "EM", "IM", "iGV", "oGV", "iGTa", "iGTe", "oGTa", "oGTe", "DXP"]
@@ -271,10 +320,10 @@ col1, col2= st.columns(2)
 
 # Plot each chart in a separate column
 with col1:
-    plot_score_bar_chart(filtered_data2, selected_function, 'green')
+    plot_score_bar_chart(filtered_data2, selected_function, gen)
 
 with col2:
-    plot_score_line_chart(filtered_data_entity, selected_function, 'green')
+    plot_score_line_chart(filtered_data_entity, selected_function, gen)
 
 # Create three columns for bar charts
 col1, col2 = st.columns(2)
@@ -287,4 +336,3 @@ columns_to_display = [col for col in data_core_filtered.columns if col not in ['
 data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(drop=True)
 
 st.dataframe(data_core_filtered_display, use_container_width=True)
-
