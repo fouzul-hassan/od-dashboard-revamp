@@ -142,7 +142,7 @@ def gen_bar_chart(selected_entity, selected_month, data):
         tooltip=['Function:N', 'Score:Q'],  # Include Function and Score in the tooltip
         # color=alt.value('blue')  # You can change the color if needed
     ).properties(
-        title=f'Scores vs Function Name - {selected_entity} - {selected_month}'
+        title=f'Scores vs Functions - {selected_entity} - {selected_month}'
     )
 
     # Calculate the average scores
@@ -171,7 +171,7 @@ def gen_bar_chart(selected_entity, selected_month, data):
 
 def display_kpi_metrics(selected_entity, selected_month, kpis, title):
     st.markdown(
-        f"<h4 style='color: white;'>{title}</h4>", 
+        f"<h7 style='color: white;'>{title}</h7>", 
         unsafe_allow_html=True
     )
 
@@ -254,7 +254,11 @@ with col3:
     plot_score_bar_chart(filtered_data2, 'ODI', odi_col)
 
 # Display the DataFrame with functions in one column and selected entities
-st.subheader(f'Entity vs Functions Scores for {selected_month}')
+st.markdown(
+        f"<h7 style='color: white;'>{f'Entity vs Functions Score Summary for {selected_month}'}</h7>", 
+        unsafe_allow_html=True
+    )
+st.subheader(f'Entity vs Functions Score Summary for {selected_month}')
 filtered_data2 = data[data['month_name'] == selected_month]
 pivot_data = filtered_data2.set_index('entity').T.drop('month_name')
 
