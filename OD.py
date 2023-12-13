@@ -42,8 +42,7 @@ data_url2 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4p6YJ0XKwY0AmS37d
 data_core = load_data(data_url2)
 
 # Set up Streamlit app title
-st.header('OD Dashbaord')
-st.subheader('AIESEC in Sri Lanka')
+st.title('OD Dashboard - AIESEC in Sri Lanka')
 
 # Get unique entity and month lists
 unique_entities = data['entity'].unique()
@@ -52,9 +51,12 @@ entity_list = list(unique_entities)
 unique_month = data['month_name'].unique()
 month_list = list(unique_month)
 
+function_list = ["FnL", "BD", "ER", "TM", "Brand", "EM", "IM", "iGV", "oGV", "iGTa", "iGTe", "oGTa", "oGTe", "DXP"]
+
 # Sidebar for user selection
 selected_entity = st.sidebar.selectbox('Select Entity', entity_list)
 selected_month = st.sidebar.selectbox('Select Month', month_list)
+selected_function = st.sidebar.selectbox('Select Function', function_list)
 
 # Filter data based on user selection
 filtered_data = data[(data['entity'] == selected_entity) & (data['month_name'] == selected_month)]
@@ -252,11 +254,6 @@ with col3:
     plot_score_bar_chart(filtered_data2, 'ODI', odi_col)
 
 # Display the DataFrame with functions in one column and selected entities
-st.markdown(
-        f"<h7 style='color: white;'>{f'Entity vs Functions Score Summary for {selected_month}'}</h7>", 
-        unsafe_allow_html=True
-    )
-st.subheader(f'Entity vs Functions Score Summary for {selected_month}')
 filtered_data2 = data[data['month_name'] == selected_month]
 pivot_data = filtered_data2.set_index('entity').T.drop('month_name')
 
@@ -265,17 +262,22 @@ col1, col2= st.columns(2)
 
 # Plot each chart in a separate column
 with col1:
+    st.markdown(
+        f"<h7 style='color: white;'>{f'Entity vs Functions Score Summary for {selected_month}'}</h7>", 
+        unsafe_allow_html=True
+    )
     st.dataframe(pivot_data, use_container_width=True)
 
 with col2:
+    st.markdown(
+        f"<h7 style='color: white;'>{f'XDI - HDI - ODI Comparisions {selected_month}'}</h7>", 
+        unsafe_allow_html=True
+    )
     plot_bubble_chart(filtered_data2)
 
 # Create three columns for bar charts
 col1, col2 = st.columns(2)
 
-# Add a dropdown for function selection in the sidebar
-function_list = ["FnL", "BD", "ER", "TM", "Brand", "EM", "IM", "iGV", "oGV", "iGTa", "iGTe", "oGTa", "oGTe", "DXP"]
-selected_function = st.selectbox('Select Function', function_list)
 
 # Display the relevant function data based on the selected function
 function_data = pivot_data.loc[[selected_function]].reset_index(drop=True)
