@@ -33,13 +33,17 @@ def load_data(data_url):
         st.error(f"An error occurred while loading data: {e}")
         return None
 
-# Example usage for loading the first CSV
+# Main Data Source
 data_url1 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRifHGM_iqkAo_9yWFckhtQOu7J-ybWSTJppU_JBhYq-cQegFDqgezIB6X5c3dHAODXDvKJ__AUZzvC/pub?gid=0&single=true&output=csv'
 data = load_data(data_url1)
 
-# Example usage for loading the second CSV
+# Sub Data Source
 data_url2 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4p6YJ0XKwY0AmS37dz_j7cuUG4uZYoZeFyCuWP0MBbjBgV7XXf2nqGompdTW-o-2x1CAxmIExoHXy/pub?gid=1230705189&single=true&output=csv'
 data_core = load_data(data_url2)
+
+# Ranks of Main Data Source
+data_url3 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTfr0Ohkx_-2hHXFzlztMkQKioFUpeMrehZKSoFgcNniHYUp5evKerCHR2TfSU7ASTmjAhKMVOqObWV/pub?gid=1230705189&single=true&output=csv'
+data_rank = load_data(data_url3)
 
 # Set up Streamlit app title
 st.title('OD Dashboard - AIESEC in Sri Lanka')
@@ -64,9 +68,9 @@ filtered_data_entity = data[(data['entity'] == selected_entity)]
 filtered_data2 = filtered_data_month = data[(data['month_name'] == selected_month)]
 
 #defined colors
-xdi_col="#e06666"
-hdi_col="#b7b7b7"
-odi_col="#46bdc6"
+xdi_col="#f85c44"
+hdi_col="#38c49c"
+odi_col="#086cb4"
 gen="#cccccc"
 
 def plot_bubble_chart(filtered_data2):
@@ -169,17 +173,17 @@ def gen_bar_chart(selected_entity, selected_month, data):
     combined_chart = chart + line_chart + point_chart
     st.altair_chart(combined_chart, use_container_width=True)
 
-def display_kpi_metrics(selected_entity, selected_month, kpis, title):
+def display_kpi_metrics(selected_entity, selected_month, kpis, title, data):
     st.markdown(
         f"<h7 style='color: white;'>{title}</h7>", 
         unsafe_allow_html=True
     )
 
     # Filter data based on the selected entity and month
-    filtered_data = data[(data['entity'] == selected_entity) & (data['month_name'] == selected_month)]
+    data = data[(data['entity'] == selected_entity) & (data['month_name'] == selected_month)]
 
     # Get KPI values and names from the filtered data
-    kpi_values = filtered_data[kpis].values[0]
+    kpi_values = data[kpis].values[0]
     kpi_names = kpis
 
     num_cols = 7  # Number of columns to display KPIs
@@ -209,16 +213,28 @@ def display_kpi_metrics(selected_entity, selected_month, kpis, title):
                 , unsafe_allow_html=True)
 
      
+
 xdi_kpis = ['DXP', 'iGTa', 'iGTe', 'iGV', 'oGTa', 'oGTe', 'oGV']
-display_kpi_metrics(selected_entity, selected_month, xdi_kpis, "XDI Scores")
+display_kpi_metrics(selected_entity, selected_month, xdi_kpis, "XDI Scores",data)
+
+"""
+
+"""
 
 # Display HDI Scores
 hdi_kpis = ['BD', 'Brand', 'EM', 'ER', 'FnL', 'IM', 'TM']
-display_kpi_metrics(selected_entity, selected_month, hdi_kpis, "HDI Scores")
+display_kpi_metrics(selected_entity, selected_month, hdi_kpis, "HDI Scores",data)
 
-# Display ODI Scores
-odi_kpis = ['ODI', 'XDI', 'HDI']
-display_kpi_metrics(selected_entity, selected_month, odi_kpis, "ODI Scores")
+
+"""
+
+"""
+
+odi_kpis = ['XDI', 'HDI', 'ODI']
+rank_kpis = ['ODI Rank', 'XDI Rank', 'HDI Rank']
+
+display_kpi_metrics(selected_entity, selected_month, odi_kpis, "ODI Scores", data)
+display_kpi_metrics(selected_entity, selected_month, rank_kpis, "ODI Scores", rank_data)
 
 """
 
@@ -278,6 +294,7 @@ with col2:
 # Create three columns for bar charts
 col1, col2 = st.columns(2)
 
+st.subheader('Functional Analysis')
 
 # Display the relevant function data based on the selected function
 function_data = pivot_data.loc[[selected_function]].reset_index(drop=True)
