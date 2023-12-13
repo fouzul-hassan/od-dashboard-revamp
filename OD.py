@@ -234,7 +234,7 @@ odi_kpis = ['XDI', 'HDI', 'ODI']
 rank_kpis = ['ODI Rank', 'XDI Rank', 'HDI Rank']
 
 display_kpi_metrics(selected_entity, selected_month, odi_kpis, "ODI Scores", data)
-display_kpi_metrics(selected_entity, selected_month, rank_kpis, "ODI Scores", rank_data)
+display_kpi_metrics(selected_entity, selected_month, rank_kpis, "ODI Scores", data_rank)
 
 """
 
