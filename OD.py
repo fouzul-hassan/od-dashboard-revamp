@@ -42,7 +42,8 @@ data_url2 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4p6YJ0XKwY0AmS37d
 data_core = load_data(data_url2)
 
 # Set up Streamlit app title
-st.title('OD Dashboard - AIESEC in Sri Lanka')
+st.title('OD Dashboard')
+st.header('AIESEC in Sri Lanka')
 
 # Get unique entity and month lists
 unique_entities = data['entity'].unique()
