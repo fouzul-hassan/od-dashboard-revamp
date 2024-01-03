@@ -60,7 +60,7 @@ function_list = ["FnL", "BD", "ER", "TM", "Brand", "EM", "IM", "iGV", "oGV", "iG
 # Sidebar for user selection
 selected_entity = st.sidebar.selectbox('Select Entity', entity_list)
 selected_month = st.sidebar.selectbox('Select Month', month_list)
-selected_function = st.sidebar.selectbox('Select Function', function_list)
+
 
 # Filter data based on user selection
 filtered_data = data[(data['entity'] == selected_entity) & (data['month_name'] == selected_month)]
@@ -293,6 +293,8 @@ with col2:
 
 # Create three columns for bar charts
 col1, col2 = st.columns(2)
+
+selected_function = st.selectbox('Select Function', function_list)
 
 st.subheader('Functional Analysis')
 
