@@ -17,7 +17,7 @@ st.set_page_config(
 )
 
 # Load data outside of Streamlit app initialization
-@st.cache
+@st.cache_data
 def load_data(data_url):
     try:
         data = pd.read_csv(data_url)
@@ -212,34 +212,95 @@ def display_kpi_metrics(selected_entity, selected_month, kpis, title, data):
                     """
                 , unsafe_allow_html=True)
 
+def display_kpi_metrics2(selected_entity, selected_month, kpis, title, data):
+    st.markdown(
+        f"<h7 style='color: white;'>{title}</h7>", 
+        unsafe_allow_html=True
+    )
+
+    # Filter data based on the selected entity and month
+    data = data[(data['entity'] == selected_entity) & (data['month_name'] == selected_month)]
+
+    # Get KPI values and names from the filtered data
+    kpi_values = data[kpis].values[0]
+    kpi_names = kpis
+
+    num_cols = 3  # Number of columns to display KPIs
+    num_kpis = len(kpi_values)
+    
+    # Calculate the number of rows needed based on the number of KPIs and columns
+    num_rows = (num_kpis + num_cols - 1) // num_cols
+
+    # Iterate over the rows to display KPIs in rows of 7
+    for i in range(num_rows):
+        cols = st.columns(num_cols)
+        for j in range(num_cols):
+            idx = i * num_cols + j
+            if idx < num_kpis:
+                cols[j].markdown(
+                    f"""
+                    <div style="
+                        background-color: #0076b6;
+                        border-radius: 10px;
+                        padding: 10px;
+                        margin: 5px;
+                    ">
+                        <p>{kpi_names[idx]}</p>
+                        <h3>{kpi_values[idx]}</h3
+                    </div>
+                    """
+                , unsafe_allow_html=True)
      
 
-xdi_kpis = ['DXP', 'iGTa', 'iGTe', 'iGV', 'oGTa', 'oGTe', 'oGV']
-display_kpi_metrics(selected_entity, selected_month, xdi_kpis, "XDI Scores",data)
 
-"""
+col1, col2 = st.columns([7, 3])
+# Applying custom CSS to adjust column widths
+st.markdown(
+    """
+    <style>
+    .css-1ikpi7r {
+        width: 70%;
+        padding: 0px;
+        margin: 0px;
+    }
+    .css-o5mxxx {
+        width: 30%;
+        padding: 0px;
+        margin: 0px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-"""
+with col1:
+    xdi_kpis = ['DXP', 'iGTa', 'iGTe', 'iGV', 'oGTa', 'oGTe', 'oGV']
+    display_kpi_metrics(selected_entity, selected_month, xdi_kpis, "XDI Scores",data)
 
-# Display HDI Scores
-hdi_kpis = ['BD', 'Brand', 'EM', 'ER', 'FnL', 'IM', 'TM']
-display_kpi_metrics(selected_entity, selected_month, hdi_kpis, "HDI Scores",data)
+    """
+
+    """
+    # Display HDI Scores
+    hdi_kpis = ['BD', 'Brand', 'EM', 'ER', 'FnL', 'IM', 'TM']
+    display_kpi_metrics(selected_entity, selected_month, hdi_kpis, "HDI Scores",data)
+
+    """
+
+    """
+with col2:
+    odi_kpis = ['XDI', 'HDI', 'ODI']
+    rank_kpis = ['ODI Rank', 'XDI Rank', 'HDI Rank']
+
+    display_kpi_metrics2(selected_entity, selected_month, odi_kpis, "ODI Scores", data)
+    """
+
+    """
+    display_kpi_metrics2(selected_entity, selected_month, rank_kpis, "ODI Scores", data_rank)
+
+    """
 
 
-"""
-
-"""
-
-odi_kpis = ['XDI', 'HDI', 'ODI']
-rank_kpis = ['ODI Rank', 'XDI Rank', 'HDI Rank']
-
-display_kpi_metrics(selected_entity, selected_month, odi_kpis, "ODI Scores", data)
-display_kpi_metrics(selected_entity, selected_month, rank_kpis, "ODI Scores", data_rank)
-
-"""
-
-
-"""
+    """
 # Generate bar chart
 gen_bar_chart(selected_entity, selected_month, data)
 
