@@ -289,7 +289,7 @@ with col1:
     """
 with col2:
     odi_kpis = ['XDI', 'HDI', 'ODI']
-    rank_kpis = ['ODI Rank', 'XDI Rank', 'HDI Rank']
+    rank_kpis = ['ODI-R', 'XDI-R', 'HDI-R']
 
     display_kpi_metrics2(selected_entity, selected_month, odi_kpis, "ODI Scores", data)
     """
