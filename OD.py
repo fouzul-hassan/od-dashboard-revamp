@@ -295,7 +295,7 @@ with col2:
     """
 
     """
-    display_kpi_metrics2(selected_entity, selected_month, rank_kpis, "ODI Scores", data_rank)
+    display_kpi_metrics2(selected_entity, selected_month, rank_kpis, "ODI Ranks", data_rank)
 
     """
 
