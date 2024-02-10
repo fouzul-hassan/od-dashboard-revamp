@@ -437,9 +437,9 @@ with col2:
 with col3:
     plot_score_line_chart(filtered_data_entity, 'ODI', odi_col)
 
+#SECTION 4
 # Create three columns for bar charts
 col1, col2, col3 = st.columns(3)
-
 # Plot each chart in a separate column
 with col1:
     plot_score_bar_chart(filtered_data2, 'XDI', xdi_col)
@@ -450,12 +450,14 @@ with col2:
 with col3:
     plot_score_bar_chart(filtered_data2, 'ODI', odi_col)
 
+
+#SECTION 5
 # Display the DataFrame with functions in one column and selected entities
 filtered_data2 = data[data['month_name'] == selected_month]
 pivot_data = filtered_data2.set_index('entity').T.drop('month_name')
 
 # Create three columns for line charts
-col1, col2= st.columns(2)
+col1, col2 = st.columns([6.5, 3.5])
 
 # Plot each chart in a separate column
 with col1:
@@ -471,6 +473,8 @@ with col2:
         unsafe_allow_html=True
     )
     plot_bubble_chart(filtered_data2)
+
+
 
 # Create three columns for bar charts
 col1, col2 = st.columns(2)
