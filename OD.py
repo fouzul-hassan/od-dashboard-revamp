@@ -531,13 +531,13 @@ bottom: 0;
 width: 100%;
 background-color: white;
 color: black;
-padding-top:20px;
+padding-top:10px;
 padding-left:250px;
 text-align: center;
 }
 </style>
 <div class="footer">
-<p>Made with ❤️ <br> By &lt;/Dev.Team&gt; of <a href="https://www.aiesec.lk/">AIESEC in Sri Lanka</a></p>
+<p>Made with ❤️ by &lt;/Dev.Team&gt; of <a href="https://www.aiesec.lk/">AIESEC in Sri Lanka</a></p>
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)
