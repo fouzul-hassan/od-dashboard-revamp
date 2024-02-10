@@ -507,5 +507,5 @@ data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(
 st.dataframe(data_core_filtered_display, use_container_width=True)
 
 
-message = f'<p style="color: white;">Made with ❤️ <br> By &lt;/Dev.Team&gt; of <a href="https://www.aiesec.lk/">AIESEC in Sri Lanka</a></p>'
+message = f'<p style="color: white;">Made with ❤️ By &lt;/Dev.Team&gt; of AIESEC in Sri Lanka</p>'
 st.write(message, unsafe_allow_html=True)
