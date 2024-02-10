@@ -510,34 +510,6 @@ data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(
 
 st.dataframe(data_core_filtered_display, use_container_width=True)
 
-#Footer
-footer="""<style>
-a:link , a:visited{
-color: black;
-background-color: transparent;
-text-decoration: none;
-}
 
-a:hover,  a:active {
-color: blue;
-background-color: transparent;
-text-decoration: none;
-}
-
-.footer {
-position: fixed;
-left: 0;
-bottom: 0;
-width: 100%;
-background-color: white;
-color: black;
-padding-top:20px;
-padding-left:250px;
-text-align: center;
-}
-</style>
-<div class="footer">
-<p>Made with ❤️ <br> By &lt;/Dev.Team&gt; of <a href="https://www.aiesec.lk/">AIESEC in Sri Lanka</a></p>
-</div>
-"""
-st.markdown(footer,unsafe_allow_html=True)
+message = f'<br><br><br><br><p style="color: white;"><center>Made with ❤️ By &lt;/Dev.Team&gt; of AIESEC in Sri Lanka</center></p>'
+st.write(message, unsafe_allow_html=True)
