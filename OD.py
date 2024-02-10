@@ -506,6 +506,10 @@ data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(
 
 st.dataframe(data_core_filtered_display, use_container_width=True)
 
+
+st.write()
+
+f"<p style='color: white;'>{f'<p>Made with ❤️ <br> By &lt;/Dev.Team&gt; of <a href="https://www.aiesec.lk/">AIESEC in Sri Lanka</a>'</p>}"
 #Footer
 footer="""<style>
 a:link , a:visited{
