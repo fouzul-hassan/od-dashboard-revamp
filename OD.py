@@ -532,7 +532,6 @@ width: 100%;
 background-color: white;
 color: black;
 padding-top:10px;
-padding-left:250px;
 text-align: center;
 }
 </style>
