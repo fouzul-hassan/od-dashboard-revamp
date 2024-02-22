@@ -511,4 +511,4 @@ data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(
 st.dataframe(data_core_filtered_display, use_container_width=True)
 
 #Footer
-st.write(<p><center>Made with ❤️ by &lt;/Dev.Team&gt; of AIESEC in Sri Lanka</center></p>)
+st.write("<p style='text-align: center;'>Made with ❤️ by &lt;/Dev.Team&gt; of AIESEC in Sri Lanka</p>", unsafe_allow_html=True)
