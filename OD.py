@@ -479,9 +479,9 @@ with col2:
 # Create three columns for bar charts
 col1, col2 = st.columns(2)
 
-selected_function = st.selectbox('Select Function', function_list)
-
 st.subheader('Functional Analysis')
+
+selected_function = st.selectbox('Select Function', function_list)
 
 # Display the relevant function data based on the selected function
 function_data = pivot_data.loc[[selected_function]].reset_index(drop=True)
