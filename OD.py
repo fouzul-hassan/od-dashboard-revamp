@@ -8,6 +8,7 @@ import plotly.express as px
 import subprocess
 import sys
 import os
+import time
 
 icon_path = 'https://aiesec.lk/data/dist/images/favicon.png'
 st.set_page_config(
@@ -15,6 +16,10 @@ st.set_page_config(
     page_title="OD Dashboard - AIESEC in Sri Lanka",
     page_icon= icon_path,
 )
+
+with st.spinner('Wait for it...'):
+    time.sleep(5)
+st.success('Done!')
 
 # Load data outside of Streamlit app initialization
 @st.cache_data
