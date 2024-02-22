@@ -17,10 +17,6 @@ st.set_page_config(
     page_icon= icon_path,
 )
 
-with st.spinner('Wait for it...'):
-    time.sleep(5)
-st.success('Done!')
-
 # Load data outside of Streamlit app initialization
 @st.cache_data
 def load_data(data_url):
@@ -37,6 +33,8 @@ def load_data(data_url):
     except Exception as e:
         st.error(f"An error occurred while loading data: {e}")
         return None
+
+st.balloons()
 
 # Main Data Source
 data_url1 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRifHGM_iqkAo_9yWFckhtQOu7J-ybWSTJppU_JBhYq-cQegFDqgezIB6X5c3dHAODXDvKJ__AUZzvC/pub?gid=0&single=true&output=csv'
