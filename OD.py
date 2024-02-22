@@ -34,8 +34,6 @@ def load_data(data_url):
         st.error(f"An error occurred while loading data: {e}")
         return None
 
-st.balloons()
-
 # Main Data Source
 data_url1 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRifHGM_iqkAo_9yWFckhtQOu7J-ybWSTJppU_JBhYq-cQegFDqgezIB6X5c3dHAODXDvKJ__AUZzvC/pub?gid=0&single=true&output=csv'
 data = load_data(data_url1)
