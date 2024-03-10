@@ -9,6 +9,8 @@ import subprocess
 import sys
 import os
 import time
+from streamlit_autorefresh import st_autorefresh
+
 
 icon_path = 'https://aiesec.lk/data/dist/images/favicon.png'
 st.set_page_config(
@@ -18,7 +20,7 @@ st.set_page_config(
 )
 
 # Load data outside of Streamlit app initialization
-@st.cache_data
+@st.cache_data(ttl=5) 
 def load_data(data_url):
     try:
         data = pd.read_csv(data_url)
@@ -60,7 +62,16 @@ function_list = ["FnL", "BD", "ER", "TM", "Brand", "EM", "IM", "iGV", "oGV", "iG
 
 # Sidebar for user selection
 selected_entity = st.sidebar.selectbox('Select Entity', entity_list)
-selected_month = st.sidebar.selectbox('Select Month', month_list)
+# Default selected month
+default_month = "February 2024"
+selected_month = st.sidebar.selectbox('Select Month', month_list, index=month_list.index(default_month))
+
+# Check if the selected entity is "RAJARATA" and the selected month is before February 2024
+if selected_entity == "RAJARATA" and month_list.index(selected_month) < month_list.index("February 2024"):
+    st.info("Data for RAJARATA is only available after February 2024 :') ")
+    st.stop()
+
+
 
 
 # Filter data based on user selection
