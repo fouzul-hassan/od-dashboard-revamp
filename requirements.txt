@@ -4,3 +4,4 @@ numpy==1.21.2
 altair==4.1.0
 matplotlib==3.4.3
 plotly>=4.0.0,<6.0.0
+streamlit_autorefresh
