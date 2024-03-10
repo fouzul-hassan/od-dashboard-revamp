@@ -20,7 +20,7 @@ st.set_page_config(
 )
 
 # Load data outside of Streamlit app initialization
-@st.cache_data(ttl=5) 
+@st.cache_data(ttl=1800) 
 def load_data(data_url):
     try:
         data = pd.read_csv(data_url)
