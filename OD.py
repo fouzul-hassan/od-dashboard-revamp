@@ -127,6 +127,7 @@ def plot_score_line_chart(filtered_data, score_column, color):
     # Display the chart using Streamlit
     st.altair_chart(chart, use_container_width=True)
 
+
 def plot_score_bar_chart(filtered_data, score_column, color):
     # Melt the DataFrame to long format
     melted_data = filtered_data.melt(id_vars=['entity'], var_name='Function', value_name='Score')
@@ -149,27 +150,6 @@ def plot_score_bar_chart(filtered_data, score_column, color):
     # Display the chart using Streamlit
     st.altair_chart(chart, use_container_width=True)
 
-def plot_score_bar_chart22(filtered_data, score_column, color):
-    # Melt the DataFrame to long format
-    melted_data = filtered_data.melt(id_vars=['entity'], var_name='Function', value_name='Score')
-    st.dataframe(melted_data)
-    # Select the specified score column
-    score_data = melted_data[melted_data['Function'] == score_column]
-    st.dataframe(score_data)
-    # Create a bar chart using Altair
-    # chart = alt.Chart(score_data).mark_bar(opacity=0.7).encode(
-    #     x=alt.X('entity:N', title='Entity'),
-    #     y=alt.Y('Score:Q', title=f'{score_column} Score'),
-    #     color=alt.value(color),  # Use the specified color
-    #     tooltip=['entity:N', 'Score:Q']  # Include Entity and the selected score in the tooltip
-    # ).properties(
-    #     width=600,
-    #     height=400,
-    #     title=f'{score_column} Scores by Entity'
-    # )
-
-    # Display the chart using Streamlit
-    # st.altair_chart(chart, use_container_width=True)
 
 def gen_bar_chart(selected_entity, selected_month, data):
     filtered_data = data[(data['month_name'] == selected_month) & (data['entity'] == selected_entity)]
@@ -247,6 +227,30 @@ def display_kpi_metrics(selected_entity, selected_month, kpis, title, data):
                     </div>
                     """
                 , unsafe_allow_html=True)
+
+def filter_and_plot(selected_function, selected_criteria,selected_entity):
+    # Filter data based on selected function and criteria
+    filtered_data = data_core[(data_core['Function'] == selected_function) & (data_core['Criteria'] == selected_criteria)]
+    filtered_data = filtered_data.drop_duplicates()
+
+    
+    selected_columns = selected_entity
+    melted_data = filtered_data.melt(id_vars=['month_name'], value_vars=selected_columns, var_name='Entity', value_name='Score')
+    
+    # Create line chart using Altair
+    line_chart = alt.Chart(melted_data).mark_line().encode(
+        x='month_name',
+        y='Score',
+        color='Entity',
+        tooltip=['month_name', 'Entity', 'Score']
+    ).properties(
+        width=600,
+        height=400,
+        title=f'{selected_function} Scores for {selected_criteria}'
+    )
+    
+    # # Show the chart
+    st.altair_chart(line_chart, use_container_width=True)
 
 def display_kpi_metrics2(selected_entity, selected_month, kpis, title, data):
     # st.markdown(
@@ -551,19 +555,25 @@ data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(
 
 st.dataframe(data_core_filtered_display, use_container_width=True)
 
-# criteria_list = data_core_filtered['Criteria'].unique()
 
-# selected_criteria = st.selectbox('Select Criteria', criteria_list)
+## Bar chart for Criteria
+#drop down
+st.write("<br><br>", unsafe_allow_html=True)
+criteria_list = data_core_filtered['Criteria'].unique()
+selected_criteria = st.selectbox('Select Criteria', criteria_list)
+st.write("<br><br>", unsafe_allow_html=True)
 
-# crieria_data = data_core_filtered[data_core_filtered['Criteria'] == selected_criteria]
-# st.dataframe(crieria_data)
+crieria_data = data_core_filtered[data_core_filtered['Criteria'] == selected_criteria]
+cr_columns_to_display = [col for col in crieria_data.columns if col not in ['month_name', 'Function']]
+crieria_data = crieria_data[cr_columns_to_display].reset_index(drop=True)
+crieria_data = crieria_data.drop(columns=['Criteria'])
+crieria_data = crieria_data.T.reset_index()
+crieria_data.columns = ['Column', 'Value']
 
-# crieria_data = crieria_data.drop(columns=['Criteria'])
+### Plot the bar chart
+st.bar_chart(crieria_data.set_index('Column'))
 
-# # Plot bar chart
-# st.bar_chart(crieria_data)
-
-# print(data_core_filtered_display.columns)
+filter_and_plot(selected_function, selected_criteria, selected_entity)
 
 st.write("<br><br><br>", unsafe_allow_html=True)
 #Footer
