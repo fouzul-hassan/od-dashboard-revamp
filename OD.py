@@ -546,6 +546,7 @@ with col2:
 # Create three columns for bar charts
 col1, col2 = st.columns(2)
 
+
 data_core_filtered = data_core[(data_core['Function'] == selected_function) & (data_core['month_name'] == selected_month)]
 data_core_filtered = data_core_filtered.drop_duplicates()
 columns_to_display = [col for col in data_core_filtered.columns if col not in ['month_name', 'Function']]
@@ -555,10 +556,11 @@ data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(
 
 st.dataframe(data_core_filtered_display, use_container_width=True)
 
+st.subheader(f'Criteria Analysis of {selected_function} Function')
+
 
 ## Bar chart for Criteria
 #drop down
-st.write("<br><br>", unsafe_allow_html=True)
 criteria_list = data_core_filtered['Criteria'].unique()
 selected_criteria = st.selectbox('Select Criteria', criteria_list)
 st.write("<br><br>", unsafe_allow_html=True)
