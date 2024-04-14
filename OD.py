@@ -149,6 +149,28 @@ def plot_score_bar_chart(filtered_data, score_column, color):
     # Display the chart using Streamlit
     st.altair_chart(chart, use_container_width=True)
 
+def plot_score_bar_chart22(filtered_data, score_column, color):
+    # Melt the DataFrame to long format
+    melted_data = filtered_data.melt(id_vars=['entity'], var_name='Function', value_name='Score')
+    st.dataframe(melted_data)
+    # Select the specified score column
+    score_data = melted_data[melted_data['Function'] == score_column]
+    st.dataframe(score_data)
+    # Create a bar chart using Altair
+    # chart = alt.Chart(score_data).mark_bar(opacity=0.7).encode(
+    #     x=alt.X('entity:N', title='Entity'),
+    #     y=alt.Y('Score:Q', title=f'{score_column} Score'),
+    #     color=alt.value(color),  # Use the specified color
+    #     tooltip=['entity:N', 'Score:Q']  # Include Entity and the selected score in the tooltip
+    # ).properties(
+    #     width=600,
+    #     height=400,
+    #     title=f'{score_column} Scores by Entity'
+    # )
+
+    # Display the chart using Streamlit
+    # st.altair_chart(chart, use_container_width=True)
+
 def gen_bar_chart(selected_entity, selected_month, data):
     filtered_data = data[(data['month_name'] == selected_month) & (data['entity'] == selected_entity)]
     melted_data = filtered_data.melt(id_vars=['entity'], var_name='Function', value_name='Score')
@@ -416,6 +438,8 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# st.dataframe(data_rank)
 # Bar chart Column
 with col1:
     # Generate bar chart
@@ -518,14 +542,28 @@ with col2:
 # Create three columns for bar charts
 col1, col2 = st.columns(2)
 
-
 data_core_filtered = data_core[(data_core['Function'] == selected_function) & (data_core['month_name'] == selected_month)]
+data_core_filtered = data_core_filtered.drop_duplicates()
 columns_to_display = [col for col in data_core_filtered.columns if col not in ['month_name', 'Function']]
 
 # Remove index column
 data_core_filtered_display = data_core_filtered[columns_to_display].reset_index(drop=True)
 
 st.dataframe(data_core_filtered_display, use_container_width=True)
+
+# criteria_list = data_core_filtered['Criteria'].unique()
+
+# selected_criteria = st.selectbox('Select Criteria', criteria_list)
+
+# crieria_data = data_core_filtered[data_core_filtered['Criteria'] == selected_criteria]
+# st.dataframe(crieria_data)
+
+# crieria_data = crieria_data.drop(columns=['Criteria'])
+
+# # Plot bar chart
+# st.bar_chart(crieria_data)
+
+# print(data_core_filtered_display.columns)
 
 st.write("<br><br><br>", unsafe_allow_html=True)
 #Footer
