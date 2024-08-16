@@ -63,7 +63,7 @@ function_list = ["FnL", "BD", "ER", "TM", "Brand", "EM", "IM", "iGV", "oGV", "iG
 # Sidebar for user selection
 selected_entity = st.sidebar.selectbox('Select Entity', entity_list)
 # Default selected month
-default_month = "June 2024"
+default_month = "July 2024"
 selected_month = st.sidebar.selectbox('Select Month', month_list, index=month_list.index(default_month))
 
 # Check if the selected entity is "RAJARATA" and the selected month is before February 2024
