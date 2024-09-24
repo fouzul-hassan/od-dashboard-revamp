@@ -198,8 +198,14 @@ def display_kpi_metrics(selected_entity, selected_month, kpis, title, data):
     data = data[(data['entity'] == selected_entity) & (data['month_name'] == selected_month)]
 
     # Get KPI values and names from the filtered data
-    kpi_values = data[kpis].values[0]
-    kpi_names = kpis
+    # kpi_values = data[kpis].values[0]
+    # kpi_names = kpis
+    if not data.empty:
+        kpi_values = data[kpis].values[0]
+        kpi_names = kpis
+        # Continue with your logic...
+    else:
+        st.warning("Please check your internet connection.")
 
     num_cols = 7  # Number of columns to display KPIs
     num_kpis = len(kpi_values)
